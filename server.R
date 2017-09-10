@@ -24,13 +24,11 @@ TitanicTrain <- TitanicDfObservations[ trainIndex,]
 TitanicTest <- TitanicDfObservations[ -trainIndex,]
 
 if(!file.exists("./model.rds")){
-    gbmFit <- train(Survived ~ ., data = TitanicTrain, method="xgbLinear")
-    saveRDS(gbmFit, "./model.rds")
+    xgbFit <- train(Survived ~ ., data = TitanicTrain, method="xgbLinear")
+    saveRDS(xgbFit, "./model.rds")
 } else {
-    gbmFit <- readRDS("./model.rds")
+    xgbFit <- readRDS("./model.rds")
 }
-
-#gbmFit <- train(Survived ~ ., data = TitanicTrain, method="xgbLinear")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -45,7 +43,7 @@ shinyServer(function(input, output) {
       df <- data.frame(input$class, input$sex, input$age)
       colnames(df) <- c("Class", "Sex", "Age")
       
-      test <- predict(gbmFit, newdata = df, type='prob')
+      test <- predict(xgbFit, newdata = df, type='prob')
   })
   
 })
